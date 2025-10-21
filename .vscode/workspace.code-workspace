@@ -1,0 +1,18 @@
+{
+  "folders": [
+    {
+      "path": ".."
+    },
+    {
+      "path": "../test-eval",
+      "name": "Eval",
+      "settings": {
+        "python.defaultInterpreterPath": "../ingester/.venv/bin/python",
+      }
+    }
+  ],
+  "settings": {
+    "debug.internalConsoleOptions": "neverOpen",
+    "debugpy.debugJustMyCode": false
+  }
+}
