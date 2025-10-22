@@ -135,3 +135,7 @@ class PrettyConsole:
             **kwargs: Keyword arguments to pass to console.print
         """
         self.console.print(*args, **kwargs)
+
+
+# Global console instance
+console = PrettyConsole()
