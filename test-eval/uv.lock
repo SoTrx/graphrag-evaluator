@@ -3012,6 +3012,7 @@ dependencies = [
     { name = "dotenv" },
     { name = "graphrag" },
     { name = "pandas" },
+    { name = "rich" },
 ]
 
 [package.metadata]
@@ -3020,6 +3021,7 @@ requires-dist = [
     { name = "dotenv", specifier = ">=0.9.9" },
     { name = "graphrag", specifier = ">=2.7.0" },
     { name = "pandas", specifier = ">=2.3.3" },
+    { name = "rich", specifier = ">=13.0.0" },
 ]
 
 [[package]]
