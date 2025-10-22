@@ -1,11 +1,11 @@
 
 import asyncio
-from pathlib import Path
 
-from azure.ai.evaluation import AzureOpenAIModelConfiguration, RetrievalEvaluator
+from azure.ai.evaluation import RetrievalEvaluator
 from dotenv import load_dotenv
-from graph_sdk import GraphContext, GraphExplorer, SearchType
-from utils import PrettyConsole, load_or_die
+
+from graph_sdk import GraphExplorer, SearchType
+from utils import EvaluationConfig, PrettyConsole
 
 load_dotenv()
 
@@ -18,42 +18,15 @@ async def main():
         "[bold cyan]🚀 Starting GraphRAG Evaluation[/bold cyan]", style="bold")
     console.print()
 
-    # Env
-    endpoint = load_or_die("AZURE_ENDPOINT")
-    api_key = load_or_die("AZURE_API_KEY")
-    deployment_name = load_or_die("AZURE_DEPLOYMENT_NAME")
-    api_version = load_or_die("AZURE_API_VERSION")
+    # Initialize configuration
+    config = EvaluationConfig()
+    gpt5_ctx, gpt4_ctx, model_config = config.initialize()
 
-    # Rag integration
-    console.print("[yellow]⚙️  Initializing GraphRAG contexts...[/yellow]")
-    gpt5_ctx = GraphContext(
-        graph_path=Path("sample-gpt5/output"),
-        aoia_endpoint=endpoint,
-        aoia_api_key=api_key
-    )
+    # Create explorers
     graphrag_gpt5 = GraphExplorer(gpt5_ctx)
-
-    # Rag integration
-    gpt4_ctx = GraphContext(
-        graph_path=Path("sample-gpt4/output"),
-        aoia_endpoint=endpoint,
-        aoia_api_key=api_key
-    )
     graphrag_gpt4 = GraphExplorer(gpt4_ctx)
 
-    # Example usage of GraphRagSearchService (commented out):
-    # from services import GraphRagSearchService
-    # search_service = GraphRagSearchService(graphrag_gpt5)
-    # await search_service.search_and_print_results()
-
-    # Evaluation
-    console.print("[yellow]⚙️  Setting up evaluation model...[/yellow]")
-    model_config = AzureOpenAIModelConfiguration(
-        azure_endpoint=endpoint,
-        api_key=api_key,
-        azure_deployment=deployment_name,
-        api_version=api_version,
-    )
+    # Create evaluator
     evaluate = RetrievalEvaluator(model_config=model_config, threshold=3)
 
     # Query
