@@ -1,6 +1,7 @@
 from pathlib import Path
 from typing import List
 
+from config import AoaiConfig
 from graphrag.config.enums import ModelType
 from graphrag.config.models.language_model_config import LanguageModelConfig
 from graphrag.config.models.vector_store_schema_config import VectorStoreSchemaConfig
@@ -42,9 +43,9 @@ class GraphContext:
     tokenizer: Tokenizer
     text_embedder: EmbeddingModel
 
-    def __init__(self, graph_path: Path, aoia_endpoint: str, aoia_api_key: str) -> None:
+    def __init__(self, graph_path: Path, aoai_config: AoaiConfig) -> None:
         self.load_graph(graph_path)
-        self.load_llm(aoia_endpoint, aoia_api_key)
+        self.load_llm(aoai_config)
 
     def load_graph(self, graph_path: Path) -> None:
         """Load a graph from the specified path."""
@@ -101,14 +102,14 @@ class GraphContext:
         text_unit_df = read_parquet(f"{graph_path}/{TEXT_UNIT_TABLE}.parquet")
         self.text_units = read_indexer_text_units(text_unit_df)
 
-    def load_llm(self, endpoint: str, api_key: str) -> None:
+    def load_llm(self, aoai_config: AoaiConfig) -> None:
         chat_config = LanguageModelConfig(
-            api_key=api_key,
+            api_key=aoai_config.api_key,
             type=ModelType.AzureOpenAIChat,
-            model="gpt-5-chat",
-            deployment_name="gpt-5.0",
-            api_base=endpoint,
-            api_version="2025-01-01-preview",
+            model=aoai_config.chat_deployment,
+            deployment_name=aoai_config.chat_deployment,
+            api_base=aoai_config.azure_endpoint,
+            api_version=aoai_config.api_version,
             model_supports_json=True,
             max_retries=20,
         )
@@ -119,12 +120,12 @@ class GraphContext:
         )
 
         embedding_config = LanguageModelConfig(
-            api_key=api_key,
+            api_key=aoai_config.api_key,
             type=ModelType.AzureOpenAIEmbedding,
-            model="text-embedding-3-large",
-            deployment_name="text-embedding-3-large",
-            api_base=endpoint,
-            api_version="2024-12-01-preview",
+            model=aoai_config.embedding_deployment,
+            deployment_name=aoai_config.embedding_deployment,
+            api_base=aoai_config.azure_endpoint,
+            api_version=aoai_config.embedding_api_version,
             max_retries=20,
         )
 

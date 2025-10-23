@@ -7,13 +7,13 @@
 models:
   default_chat_model:
     type: azure_openai_chat
-    model_provider: azure
+    # model_provider: azure
     auth_type: api_key # or azure_managed_identity
     api_key: ${GRAPHRAG_API_KEY} # set this in the generated .env file, or remove if managed identity
-    model: gpt-5-chat
+    model: ${CHAT_DEPLOYMENT_NAME}
     api_base: ${AZURE_ENDPOINT}
-    api_version: 2025-01-01-preview
-    deployment_name: gpt-5.0
+    api_version: ${AZURE_API_VERSION}
+    deployment_name: ${CHAT_DEPLOYMENT_NAME}
     model_supports_json: true # recommended if this is available for your model.
     concurrent_requests: 25
     async_mode: threaded # or asyncio
@@ -26,10 +26,10 @@ models:
     model_provider: azure
     auth_type: api_key
     api_key: ${GRAPHRAG_API_KEY}
-    model: text-embedding-3-large
+    model: ${EMBEDDING_DEPLOYMENT_NAME}
     api_base: ${AZURE_ENDPOINT}
-    api_version: 2024-12-01-preview
-    deployment_name: text-embedding-3-large
+    api_version: ${AZURE_EMBEDDING_API_VERSION}
+    deployment_name: ${EMBEDDING_DEPLOYMENT_NAME}
     concurrent_requests: 25
     async_mode: threaded # or asyncio
     retry_strategy: exponential_backoff
