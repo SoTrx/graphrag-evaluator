@@ -106,8 +106,8 @@ class GraphContext:
         chat_config = LanguageModelConfig(
             api_key=aoai_config.api_key,
             type=ModelType.AzureOpenAIChat,
-            model=aoai_config.chat_deployment,
-            deployment_name=aoai_config.chat_deployment,
+            model=aoai_config.chat_model_name,
+            deployment_name=aoai_config.chat_deployment_name,
             api_base=aoai_config.azure_endpoint,
             api_version=aoai_config.api_version,
             model_supports_json=True,

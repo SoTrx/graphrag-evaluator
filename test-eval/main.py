@@ -32,9 +32,11 @@ async def main():
 
     queries = load_queries()
     aoai_config_gpt5 = EvaluationConfig(chat_deployment_env_name="CHAT_DEPLOYMENT_NAME",
+                                        chat_model_env_name="CHAT_MODEL_NAME",
                                         embedding_deployment_env_name="EMBEDDING_DEPLOYMENT_NAME",
                                         graph_path="GRAPH5_PATH")
     aoai_config_gpt4 = EvaluationConfig(chat_deployment_env_name="CHAT_GPT4_1mini_DEPLOYMENT_NAME",
+                                        chat_model_env_name="CHAT_GPT4_1mini_MODEL_NAME",
                                         embedding_deployment_env_name="EMBEDDING_DEPLOYMENT_NAME",
                                         graph_path="GRAPH4_PATH")
 

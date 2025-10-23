@@ -24,13 +24,15 @@ class EvaluationConfig:
 
     def __init__(self,
                  chat_deployment_env_name: str = "CHAT_DEPLOYMENT_NAME",
+                 chat_model_env_name: str = "CHAT_MODEL_NAME",
                  embedding_deployment_env_name: str = "EMBEDDING_DEPLOYMENT_NAME",
                  graph_path: str = "GRAPH_PATH") -> None:
 
         self.aoai_config = AoaiConfig(
             azure_endpoint=load_or_die("AZURE_ENDPOINT"),
             api_key=load_or_die("AZURE_API_KEY"),
-            chat_deployment=load_or_die(chat_deployment_env_name),
+            chat_deployment_name=load_or_die(chat_deployment_env_name),
+            chat_model_name=load_or_die(chat_model_env_name),
             api_version=load_or_die("AZURE_API_VERSION"),
             embedding_deployment=load_or_die(
                 embedding_deployment_env_name),
@@ -48,6 +50,6 @@ class EvaluationConfig:
         return AzureOpenAIModelConfiguration(
             azure_endpoint=self.aoai_config.azure_endpoint,
             api_key=self.aoai_config.api_key,
-            azure_deployment=self.aoai_config.chat_deployment,
+            azure_deployment=self.aoai_config.chat_deployment_name,
             api_version=self.aoai_config.api_version,
         )
