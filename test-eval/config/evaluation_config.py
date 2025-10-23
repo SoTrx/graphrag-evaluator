@@ -9,7 +9,6 @@ from utils.env_utils import load_or_die
 from . import AoaiConfig
 
 
-@dataclass
 class EvaluationConfig:
     """Configuration for evaluation pipeline."""
 

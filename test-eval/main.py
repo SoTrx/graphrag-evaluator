@@ -1,5 +1,4 @@
 import asyncio
-from functools import partial
 
 from azure.ai.evaluation import (
     EvaluatorConfig,
