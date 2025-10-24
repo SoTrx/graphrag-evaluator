@@ -50,8 +50,6 @@ async def main():
             console.print_context(f"{graph_explorer.model_deployment_name} Context Response",
                                   search_result.response, search_result)
 
-        # sleep(60)
-
         # Actual evaluators being run
         run_evaluators(graph_explorer, aoai_config)
 
