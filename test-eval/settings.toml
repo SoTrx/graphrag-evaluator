@@ -1,3 +1,5 @@
+[default]
+
 [openai_defaults]
 api_key = "@format {env[API_KEY]}"
 api_base = "@format {env[API_ENDPOINT]}"
@@ -9,6 +11,7 @@ model = "gpt-5-chat"
 api_base = "@jinja {{ env['GPT5_ENDPOINT'] or this.openai_defaults.api_base }}"
 deployment_name = "gpt-5-chat"
 api_version = "@jinja {{ env['API_VERSION'] or this.openai_defaults.api_version }}"
+model_supports_json = true
 
 [models.azure_openai_chat.gpt4]
 api_key = "@jinja {{ env['GPT4_API_KEY'] or this.openai_defaults.api_key }}"
@@ -16,13 +19,14 @@ model = "gpt-4.1-mini"
 api_base = "@jinja {{ env['GPT4_ENDPOINT'] or this.openai_defaults.api_base }}"
 deployment_name = "gpt-4.1-mini"
 api_version = "@jinja {{ env['API_VERSION'] or this.openai_defaults.api_version }}"
+model_supports_json = true
 
 [models.azure_openai_embedding.large]
 api_key = "@format {this.openai_defaults.api_key }"
 model = "text-embedding-3-large"
 api_base = "@format {this.openai_defaults.api_base }"
 deployment_name = "text-embedding-3-large"
-api_version = "2024-12-01-preview"
+api_version = "2023-05-15"
 
 [evaluations]
 

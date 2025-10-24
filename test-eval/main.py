@@ -1,4 +1,5 @@
 import asyncio
+from time import sleep
 
 from adapters.aoai_configs_adapter import aoai_configs_adapter
 from azure.ai.evaluation import AzureOpenAIModelConfiguration
@@ -23,7 +24,6 @@ async def query_graphrag(graph_explorer: GraphExplorer, queries: list[str], sear
 
 
 async def main():
-
     console.print(
         "[bold cyan]🚀 Starting GraphRAG Evaluation Pipeline[/bold cyan]\n", style="bold"
     )
@@ -41,6 +41,16 @@ async def main():
     for graph_explorer in graph_explorers:
         # Kept for better content visibility
         await query_graphrag(graph_explorer, queries)
+
+        for query in queries:
+            console.print(
+                f"\n[bold purple]❓ Querying : {query} ...[/bold purple]")
+
+            search_result = await graph_explorer.search(query, SearchType.LOCAL)
+            console.print_context(f"{graph_explorer.model_deployment_name} Context Response",
+                                  search_result.response, search_result)
+
+        # sleep(60)
 
         # Actual evaluators being run
         run_evaluators(graph_explorer, aoai_config)

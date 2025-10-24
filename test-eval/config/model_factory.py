@@ -6,6 +6,9 @@ from graphrag.config.models.language_model_config import LanguageModelConfig
 
 
 class ModelFactory:
+
+    MAX_RETRIES: int = 20
+
     def __init__(self) -> None:
         self.chat_models: dict[str,
                                LanguageModelConfig] = self.build_models(ModelType.AzureOpenAIChat)
@@ -52,5 +55,7 @@ class ModelFactory:
                 deployment_name=model_config.deployment_name,
                 model=model_config.model,
                 api_version=model_config.api_version,
-                type=model_type)
+                type=model_type,
+                max_retries=self.MAX_RETRIES,
+                model_supports_json=model_config.model_supports_json if hasattr(model_config, 'model_supports_json') else None)
         return models

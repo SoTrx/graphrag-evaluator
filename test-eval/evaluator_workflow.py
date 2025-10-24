@@ -26,7 +26,7 @@ def run_evaluators(explorer: GraphExplorer, evaluation_model: AzureOpenAIModelCo
         target=explorer.search,
         evaluators={
             "groundedness": groundedness_eval,
-            "qa": qa_eval,
+            "qa": qa_eval
         },
         evaluator_config={
             "default": {
