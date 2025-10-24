@@ -1,7 +1,6 @@
 from pathlib import Path
 from typing import List
 
-from config import AoaiConfig
 from graphrag.config.enums import ModelType
 from graphrag.config.models.language_model_config import LanguageModelConfig
 from graphrag.config.models.vector_store_schema_config import VectorStoreSchemaConfig
@@ -43,9 +42,11 @@ class GraphContext:
     tokenizer: Tokenizer
     text_embedder: EmbeddingModel
 
-    def __init__(self, graph_path: Path, aoai_config: AoaiConfig) -> None:
+    def __init__(self, graph_path: Path, chat_config: LanguageModelConfig, embedding_config: LanguageModelConfig) -> None:
         self.load_graph(graph_path)
-        self.load_llm(aoai_config)
+        self.load_llm(chat_config)
+        self.load_embedding(embedding_config)
+        self.tokenizer = get_tokenizer(chat_config)
 
     def load_graph(self, graph_path: Path) -> None:
         """Load a graph from the specified path."""
@@ -102,37 +103,16 @@ class GraphContext:
         text_unit_df = read_parquet(f"{graph_path}/{TEXT_UNIT_TABLE}.parquet")
         self.text_units = read_indexer_text_units(text_unit_df)
 
-    def load_llm(self, aoai_config: AoaiConfig) -> None:
-        chat_config = LanguageModelConfig(
-            api_key=aoai_config.api_key,
-            type=ModelType.AzureOpenAIChat,
-            model=aoai_config.chat_model_name,
-            deployment_name=aoai_config.chat_deployment_name,
-            api_base=aoai_config.azure_endpoint,
-            api_version=aoai_config.api_version,
-            model_supports_json=True,
-            max_retries=20,
-        )
+    def load_llm(self, chat_config: LanguageModelConfig) -> None:
         self.chat_model = ModelManager().get_or_create_chat_model(
-            name="local_search",
+            name=str(chat_config.deployment_name),
             model_type=ModelType.AzureOpenAIChat,
             config=chat_config,
         )
 
-        embedding_config = LanguageModelConfig(
-            api_key=aoai_config.api_key,
-            type=ModelType.AzureOpenAIEmbedding,
-            model=aoai_config.embedding_deployment,
-            deployment_name=aoai_config.embedding_deployment,
-            api_base=aoai_config.azure_endpoint,
-            api_version=aoai_config.embedding_api_version,
-            max_retries=20,
-        )
-
+    def load_embedding(self, embedding_config: LanguageModelConfig) -> None:
         self.text_embedder = ModelManager().get_or_create_embedding_model(
-            name="local_search_embedding",
+            name=str(embedding_config.deployment_name),
             model_type=ModelType.AzureOpenAIEmbedding,
             config=embedding_config,
         )
-
-        self.tokenizer = get_tokenizer(chat_config)

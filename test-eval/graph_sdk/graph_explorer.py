@@ -1,22 +1,18 @@
-from dataclasses import dataclass
 from pathlib import Path
 
-from config import AoaiConfig
+from graphrag.config.models.language_model_config import LanguageModelConfig
 from graphrag.query.structured_search.base import SearchResult
 
 from .graph_context import GraphContext
 from .search_builder import Drift, Global, Local, SearchType
 
 
-@dataclass
 class GraphExplorer:
 
-    def __init__(self,
-                 azure_openai_config: AoaiConfig,
-                 graph_path: Path) -> None:
-
+    def __init__(self, graph_path: Path, chat_config: LanguageModelConfig, embedding_config: LanguageModelConfig) -> None:
         self._graph_context = GraphContext(graph_path=graph_path,
-                                           aoai_config=azure_openai_config)
+                                           chat_config=chat_config,
+                                           embedding_config=embedding_config)
         self._local = Local.build(self._graph_context)
         self._global = Global.build(self._graph_context)
         self._drift = Drift.build(self._graph_context)
@@ -29,3 +25,13 @@ class GraphExplorer:
                 return await self._global.search(query)
             case SearchType.DRIFT:
                 return await self._drift.search(query)
+    
+    @property
+    def model_deployment_name(self) -> str | None:
+        """Get the deployment name of the chat model."""
+        return self._graph_context.chat_model.config.deployment_name
+    
+    @property
+    def model_name(self) -> str | None:
+        """Get the name of the chat model."""
+        return self._graph_context.chat_model.config.model

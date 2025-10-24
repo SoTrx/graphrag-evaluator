@@ -10,4 +10,5 @@ dependencies = [
     "graphrag>=2.7.0",
     "pandas>=2.3.3",
     "rich>=13.0.0",
+    "dynaconf>=3.2.11",
 ]
