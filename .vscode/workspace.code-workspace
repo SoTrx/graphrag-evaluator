@@ -13,6 +13,7 @@
   ],
   "settings": {
     "debug.internalConsoleOptions": "neverOpen",
-    "debugpy.debugJustMyCode": false
+    "debugpy.debugJustMyCode": false,
+    "python.analysis.typeCheckingMode": "standard"
   }
 }

@@ -32,7 +32,8 @@
         "ms-python.bandit",
         "ms-python.debugpy",
         "hashicorp.terraform",
-        "yzhang.markdown-all-in-one"
+        "yzhang.markdown-all-in-one",
+        "tamasfe.even-better-toml"
       ],
       "settings": {
         "editor.defaultFormatter": "charliermarsh.ruff",

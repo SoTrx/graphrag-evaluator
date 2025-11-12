@@ -42,9 +42,11 @@ class GraphContext:
     tokenizer: Tokenizer
     text_embedder: EmbeddingModel
 
-    def __init__(self, graph_path: Path, aoia_endpoint: str, aoia_api_key: str) -> None:
+    def __init__(self, graph_path: Path, chat_config: LanguageModelConfig, embedding_config: LanguageModelConfig) -> None:
         self.load_graph(graph_path)
-        self.load_llm(aoia_endpoint, aoia_api_key)
+        self.load_llm(chat_config)
+        self.load_embedding(embedding_config)
+        self.tokenizer = get_tokenizer(chat_config)
 
     def load_graph(self, graph_path: Path) -> None:
         """Load a graph from the specified path."""
@@ -101,37 +103,16 @@ class GraphContext:
         text_unit_df = read_parquet(f"{graph_path}/{TEXT_UNIT_TABLE}.parquet")
         self.text_units = read_indexer_text_units(text_unit_df)
 
-    def load_llm(self, endpoint: str, api_key: str) -> None:
-        chat_config = LanguageModelConfig(
-            api_key=api_key,
-            type=ModelType.AzureOpenAIChat,
-            model="gpt-5-chat",
-            deployment_name="gpt-5.0",
-            api_base=endpoint,
-            api_version="2025-01-01-preview",
-            model_supports_json=True,
-            max_retries=20,
-        )
+    def load_llm(self, chat_config: LanguageModelConfig) -> None:
         self.chat_model = ModelManager().get_or_create_chat_model(
-            name="local_search",
+            name=str(chat_config.deployment_name),
             model_type=ModelType.AzureOpenAIChat,
             config=chat_config,
         )
 
-        embedding_config = LanguageModelConfig(
-            api_key=api_key,
-            type=ModelType.AzureOpenAIEmbedding,
-            model="text-embedding-3-large",
-            deployment_name="text-embedding-3-large",
-            api_base=endpoint,
-            api_version="2024-12-01-preview",
-            max_retries=20,
-        )
-
+    def load_embedding(self, embedding_config: LanguageModelConfig) -> None:
         self.text_embedder = ModelManager().get_or_create_embedding_model(
-            name="local_search_embedding",
+            name=str(embedding_config.deployment_name),
             model_type=ModelType.AzureOpenAIEmbedding,
             config=embedding_config,
         )
-
-        self.tokenizer = get_tokenizer(chat_config)

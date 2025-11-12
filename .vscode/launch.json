@@ -9,7 +9,8 @@
             "console": "integratedTerminal",
             "cwd": "${workspaceFolder}/test-eval",
             "python": ".venv/bin/python",
-            "justMyCode": true
+            "justMyCode": true,
+            // "subProcess": true
         }
     ]
 }
