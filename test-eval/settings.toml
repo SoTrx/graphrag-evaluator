@@ -5,6 +5,11 @@ api_key = "@format {env[API_KEY]}"
 api_base = "@format {env[API_ENDPOINT]}"
 api_version = "2025-01-01-preview"
 
+[project_defaults]
+api_base = "@format {env[FOUNDRY_PROJECT_ENDPOINT]}"
+cloud_evaluation_deployment_name = "@format {env[FOUNDRY_PROJECT_EVALUATION_DEPLOYMENT_NAME]}"
+
+
 [models.azure_openai_chat.gpt5]
 api_key = "@jinja {{ env['GPT5_API_KEY'] or this.openai_defaults.api_key }}"
 model = "gpt-5-chat"

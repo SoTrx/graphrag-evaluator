@@ -11,4 +11,6 @@ dependencies = [
     "pandas>=2.3.3",
     "rich>=13.0.0",
     "dynaconf>=3.2.11",
+    "azure-ai-projects<2.0.0b1",
+    "azure-identity>=1.25.1",
 ]
