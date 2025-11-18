@@ -1,0 +1,6 @@
+[project]
+subscription_id = "@format {env[FOUNDRY_SUBSCRIPTION_ID]}"
+resource_group_name = "@format {env[FOUNDRY_RESOURCE_GROUP_NAME]}"
+azure_ai_project = "@format {env[FOUNDRY_PROJECT_ENDPOINT]}"
+project_name = "@format {env[FOUNDRY_PROJECT_NAME]}"
+agent_id = "@format {env[FOUNDRY_AGENT_ID]}"

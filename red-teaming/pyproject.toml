@@ -6,11 +6,10 @@ readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
     "dotenv>=0.9.9",
-    "graphrag>=2.7.0",
     "pandas>=2.3.3",
     "rich>=13.0.0",
     "dynaconf>=3.2.11",
     "azure-ai-projects<2.0.0b1",
     "azure-identity>=1.25.1",
-    "azure-ai-evaluation>=1.13"
+    "azure-ai-evaluation[redteam]>=1.13"
 ]

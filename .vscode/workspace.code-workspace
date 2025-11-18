@@ -5,9 +5,16 @@
     },
     {
       "path": "../test-eval",
-      "name": "Eval",
+      "name": "Test-Eval",
       "settings": {
-        "python.defaultInterpreterPath": "../ingester/.venv/bin/python",
+        "python.defaultInterpreterPath": "../test-eval/.venv/bin/python",
+      }
+    },
+    {
+      "path": "../red-teaming",
+      "name": "Red-Teaming",
+      "settings": {
+        "python.defaultInterpreterPath": "../red-teaming/.venv/bin/python",
       }
     }
   ],
