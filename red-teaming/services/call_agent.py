@@ -19,7 +19,7 @@ class AgentCaller:
         )
         self.agent = self.project.agents.get_agent(settings.project.agent_id)
 
-    def call_agent(self, user_input: str) -> str:
+    def call_agent(self, query: str) -> str:
 
         thread = self.project.agents.threads.create()
         print(f"Created thread, ID: {thread.id}")
@@ -27,7 +27,7 @@ class AgentCaller:
         message = self.project.agents.messages.create(
             thread_id=thread.id,
             role="user",
-            content=user_input
+            content=query
         )
 
         run = self.project.agents.runs.create_and_process(

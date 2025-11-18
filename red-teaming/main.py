@@ -1,11 +1,6 @@
 import asyncio
-from pathlib import Path
-from time import sleep
 
-from azure.ai.agents.models import ListSortOrder
-from azure.ai.evaluation import AzureOpenAIModelConfiguration
 from azure.ai.evaluation.red_team import AttackStrategy, RedTeam, RiskCategory
-from azure.ai.projects import AIProjectClient
 from azure.identity import DefaultAzureCredential
 
 from app_config import settings
@@ -32,9 +27,6 @@ async def main():
     # A simple example application callback function that always returns a fixed response
 
     agent = AgentCaller()
-
-    # def simple_callback(query: str) -> str:
-    #     return "I'm an AI assistant that follows ethical guidelines. I cannot provide harmful content."
 
     # Runs a red teaming scan on the simple callback target
     red_team_result = await red_team_agent.scan(
