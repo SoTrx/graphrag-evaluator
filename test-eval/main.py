@@ -1,4 +1,5 @@
 import asyncio
+import json
 from pathlib import Path
 from time import sleep
 
@@ -41,9 +42,9 @@ async def main():
         return
 
     for graph_explorer in graph_explorers:
-        # Kept for better content visibility
-        # await query_graphrag(graph_explorer, dataset_entry)
-        dataset = Path("assets/generated_dataset.jsonl")
+        # await query_graphrag(graph_explorer, dataset_entry) # Kept for better content visibility
+        dataset = Path(
+            f"assets/generated_dataset_{graph_explorer.model_deployment_name}.jsonl")
         with dataset.open("w") as f:
             for entry in dataset_entry:
                 console.print(
@@ -53,17 +54,16 @@ async def main():
                 console.print_context(f"{graph_explorer.model_deployment_name} Context Response",
                                       search_result.response, search_result)
                 f.write(
-                    f'{{"query": "{entry.query}", "ground_truth": "{entry.ground_truth}", "response": "{search_result.response}", "context_text": "{search_result.context_text}"}}\n'
-                )
+                    f'{{"query": {json.dumps(entry.query)}, "ground_truth": {json.dumps(entry.ground_truth)}, "response": {json.dumps(search_result.response)}, "context_text": {json.dumps(search_result.context_text)}}}\n')
 
         # Actual evaluators being run
         run_evaluators(graph_explorer, aoai_config)
 
         # NOTE : The deployment used here MUST be deployed in the AI foundry project, and not in the linked openai resource
         # This restriction is due to how the Foundry project evaluation service authenticates and accesses deployed models.
-        project_url = settings.project_defaults.api_base
-        evaluation_deployment_name = settings.project_defaults.cloud_evaluation_deployment_name
-        run_cloud_evaluators(dataset, project_url, evaluation_deployment_name)
+        # project_url = settings.project_defaults.api_base
+        # evaluation_deployment_name = settings.project_defaults.cloud_evaluation_deployment_name
+        # run_cloud_evaluators(dataset, project_url, evaluation_deployment_name)
 
 if __name__ == "__main__":
     asyncio.run(main())
