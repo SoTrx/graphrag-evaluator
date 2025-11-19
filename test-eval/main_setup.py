@@ -6,18 +6,19 @@ from config.model_factory import ModelFactory
 from graph_sdk import GraphExplorer
 from graphrag.config.enums import ModelType
 from utils import console
+from utils.json_utils import DatasetEntry
 
 
-def initialize() -> tuple[list[str], ModelFactory, list[GraphExplorer]]:
+def initialize() -> tuple[list[DatasetEntry], ModelFactory, list[GraphExplorer]]:
     # Initialize configuration and GraphRAG contexts
     console.print(
         "[yellow]⚙️  Loading configuration and initializing GraphRAG contexts...[/yellow]")
 
-    queries = load_queries()
+    dataset_entries = load_queries()
     model_factory = ModelFactory()
     graph_explorers = initialize_graph_explorers(model_factory)
 
-    return queries, model_factory, graph_explorers
+    return dataset_entries, model_factory, graph_explorers
 
 
 def initialize_graph_explorers(model_factory: ModelFactory):
@@ -28,12 +29,13 @@ def initialize_graph_explorers(model_factory: ModelFactory):
         chat_model = model_factory.get(model_name, ModelType.AzureOpenAIChat)
         embedding_model = model_factory.get(
             "large", ModelType.AzureOpenAIEmbedding)
-        
+
         # Skip if models are not properly configured
         if chat_model is None or embedding_model is None:
-            console.print(f"[yellow]⚠️  Skipping {model_name}: Missing model configuration[/yellow]")
+            console.print(
+                f"[yellow]⚠️  Skipping {model_name}: Missing model configuration[/yellow]")
             continue
-            
+
         graph_path = settings.evaluations[model_name].path
 
         graph_explorer = GraphExplorer(
