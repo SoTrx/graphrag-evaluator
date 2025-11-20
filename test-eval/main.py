@@ -1,69 +1,69 @@
 import asyncio
 import json
+from functools import partial
 from pathlib import Path
-from time import sleep
+from typing import Dict
 
-from adapters.aoai_configs_adapter import aoai_configs_adapter
-from app_config import settings
-from azure.ai.evaluation import AzureOpenAIModelConfiguration
-from evaluator_workflow import run_cloud_evaluators, run_evaluators
-from graph_sdk import GraphExplorer, SearchType
 from graphrag.config.enums import ModelType
+
+from evaluator_workflow import evaluate_cloud, evaluate_locally
+from graph_sdk import GraphExplorer, SearchType
 from main_setup import initialize
 from utils import console
+from utils.concurrency import limit_concurrency
+from utils.json_utils import DatasetEntry
 
-
-async def query_graphrag(graph_explorer: GraphExplorer, dataset_entries: list, search_type: SearchType = SearchType.LOCAL):
-    # Actual evaluation - GPT 5
-    console.print(
-        f"\n[bold green]🔍 Running {graph_explorer.model_deployment_name} Analysis...[/bold green]")
-    for entry in dataset_entries:
-        console.print(
-            f"\n[bold purple]❓ Querying : {entry.query} ...[/bold purple]")
-
-        search_result = await graph_explorer.search(entry.query, search_type)
-        console.print_context(f"{graph_explorer.model_deployment_name} Context Response",
-                              search_result.response, search_result)
+# Limit to 3 concurrent searches
+search_limiter = asyncio.Semaphore(3)
 
 
 async def main():
-    console.print(
-        "[bold cyan]🚀 Starting GraphRAG Evaluation Pipeline[/bold cyan]\n", style="bold"
-    )
-    dataset_entry, model_factory, graph_explorers = initialize()
+    console.print("[bold cyan]🚀 Starting Evaluation Pipeline[/bold cyan]\n")
+    dataset_entries, factory, graph_explorers = initialize()
 
-    aoai_config = model_factory.get_simple_model(
-        "gpt5", ModelType.AzureOpenAIChat)
+    aoai_config = factory.get_simple_model("gpt5", ModelType.AzureOpenAIChat)
+    assert aoai_config is not None, "Failed to get Azure OpenAI model configuration."
 
-    if aoai_config is None:
-        console.print(
-            "[bold red]❌ Error: Could not retrieve model configuration.[/bold red]"
-        )
-        return
-
+    # For each GraphRAG implementation (sample-gpt4, sample-gpt5)...
     for graph_explorer in graph_explorers:
-        # await query_graphrag(graph_explorer, dataset_entry) # Kept for better content visibility
-        dataset = Path(
-            f"assets/generated_dataset_{graph_explorer.model_deployment_name}.jsonl")
+        rag_model = graph_explorer.model_deployment_name
+
+        # Step 1 : Query the graph concurrently for all dataset entries
+        graph_search = partial(__search, graph_explorer)
+        responses = await asyncio.gather(*map(graph_search, dataset_entries))
+
+        # Step 2 : Create the corresponding dataset
+        dataset = Path(f"assets/generated_dataset_{rag_model}.jsonl")
         with dataset.open("w") as f:
-            for entry in dataset_entry:
-                console.print(
-                    f"\n[bold purple]❓ Querying : {entry.query} ...[/bold purple]")
+            for entry in responses:
+                f.write(f'{json.dumps(entry)}\n')
 
-                search_result = await graph_explorer.search(entry.query, SearchType.LOCAL)
-                console.print_context(f"{graph_explorer.model_deployment_name} Context Response",
-                                      search_result.response, search_result)
-                f.write(
-                    f'{{"query": {json.dumps(entry.query)}, "ground_truth": {json.dumps(entry.ground_truth)}, "response": {json.dumps(search_result.response)}, "context_text": {json.dumps(search_result.context_text)}}}\n')
+        # Step 3 : Evaluate the dataset locally or in cloud
+        evaluation_result = evaluate_locally(dataset, aoai_config)
 
-        # Actual evaluators being run
-        run_evaluators(graph_explorer, aoai_config)
-
-        # NOTE : The deployment used here MUST be deployed in the AI foundry project, and not in the linked openai resource
-        # This restriction is due to how the Foundry project evaluation service authenticates and accesses deployed models.
+        # NOTE : Uncomment below to run cloud evaluators
         # project_url = settings.project_defaults.api_base
         # evaluation_deployment_name = settings.project_defaults.cloud_evaluation_deployment_name
         # run_cloud_evaluators(dataset, project_url, evaluation_deployment_name)
+
+        console.print(evaluation_result)
+
+
+@limit_concurrency(search_limiter)
+async def __search(explorer: GraphExplorer, entry: DatasetEntry) -> Dict[str, str]:
+    """
+     Perform a search on the graph rag using the provided dataset entry.
+     """
+    console.print(f"[bold purple] Querying : {entry.query} ...[/bold purple]")
+    search_result = await explorer.search(entry.query, SearchType.LOCAL)
+    console.print(f"[green] Querying : {entry.query} ... OK ![/green]")
+
+    return {
+        "query": json.dumps(entry.query),
+        "ground_truth": json.dumps(entry.ground_truth),
+        "response": json.dumps(search_result.response),
+        "context_text": json.dumps(search_result.context_text)
+    }
 
 if __name__ == "__main__":
     asyncio.run(main())
