@@ -16,6 +16,13 @@
       "settings": {
         "python.defaultInterpreterPath": "../red-teaming/.venv/bin/python",
       }
+    },
+        {
+      "path": "../graph-mcp",
+      "name": "Graph-MCP",
+      "settings": {
+        "python.defaultInterpreterPath": "../graph-mcp/.venv/bin/python",
+      }
     }
   ],
   "settings": {
