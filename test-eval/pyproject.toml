@@ -14,3 +14,8 @@ dependencies = [
     "azure-identity>=1.25.1",
     "azure-ai-evaluation>=1.13"
 ]
+
+[dependency-groups]
+dev = [
+    "debugpy>=1.8.0",
+]

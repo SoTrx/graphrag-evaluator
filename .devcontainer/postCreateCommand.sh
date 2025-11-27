@@ -11,3 +11,4 @@ echo 'eval "$(uv generate-shell-completion bash)"' >> ~/.bashrc
 cd test-eval && uv sync && cd -
 cd red-teaming && uv sync && cd -
 cd graph-mcp && uv sync && cd -
+cd agent-framework && uv sync && cd -
