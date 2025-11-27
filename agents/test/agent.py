@@ -41,4 +41,6 @@ async def test_e2e_http_mcp_agent_query(chat_client):
             "Who is Scrooge's business partner?",
             tools=mcp_server
         )
+
+        print(result)
         assert result is not None, "Agent should return a result"

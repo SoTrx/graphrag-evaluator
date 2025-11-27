@@ -11,3 +11,7 @@ echo 'eval "$(uv generate-shell-completion bash)"' >> ~/.bashrc
 cd test-eval && uv sync && cd -
 cd red-teaming && uv sync && cd -
 cd graph-mcp && uv sync && cd -
+cd agents && uv sync && cd -
+
+sudo apt update
+sudo apt install graphviz -y

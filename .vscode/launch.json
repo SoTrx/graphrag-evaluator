@@ -1,16 +1,57 @@
 {
     "version": "0.2.0",
     "configurations": [
+        
+
         {
-            "name": "Python: main.py",
+            "name": "Python: main.py (uv managed)",
             "type": "debugpy",
             "request": "launch",
-            "program": "main.py",
+            "program": "${workspaceFolder}/test-eval/main.py",
             "console": "integratedTerminal",
             "cwd": "${workspaceFolder}/test-eval",
-            "python": ".venv/bin/python",
-            "justMyCode": true,
-            // "subProcess": true
+            "python": "${workspaceFolder}/test-eval/.venv/bin/python",
+            "justMyCode": true
+        },
+        {
+            "name": "GraphRAG MCP Server (uv managed)",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "${workspaceFolder}/graph-mcp/server.py",
+            "console": "integratedTerminal",
+            "cwd": "${workspaceFolder}/graph-mcp",
+            "python": "${workspaceFolder}/graph-mcp/.venv/bin/python",
+            "justMyCode": true
+        },
+        {
+            "name": "Agent Framework Tests (uv managed)",
+            "type": "debugpy",
+            "request": "launch",
+            "module": "pytest",
+            "console": "integratedTerminal",
+            "cwd": "${workspaceFolder}/agents",
+            "python": "${workspaceFolder}/agents/.venv/bin/python",
+            "justMyCode": true
+        },
+        {
+            "name": "Agent AG-UI Server (uv managed)",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "${workspaceFolder}/agents/server.py",
+            "console": "integratedTerminal",
+            "cwd": "${workspaceFolder}/agents",
+            "python": "${workspaceFolder}/agents/.venv/bin/python",
+            "justMyCode": false
+        }
+    ],
+    "compounds": [
+        {
+            "name": "MCP Server + Tests",
+            "configurations": ["GraphRAG MCP Server (uv managed)", "Agent Framework Tests (uv managed)"],
+            "stopAll": true,
+            "presentation": {
+                "order": 1
+            }
         }
     ]
 }

@@ -7,21 +7,40 @@
       "path": "../test-eval",
       "name": "Test-Eval",
       "settings": {
-        "python.defaultInterpreterPath": "../test-eval/.venv/bin/python",
+        "python.defaultInterpreterPath": "${workspaceFolder:Test-Eval}/.venv/bin/python",
+        "python.testing.pytestEnabled": true,
+        "python.testing.pytestArgs": ["-v"],
+        "python.testing.cwd": "${workspaceFolder:Test-Eval}"
       }
     },
     {
       "path": "../red-teaming",
       "name": "Red-Teaming",
       "settings": {
-        "python.defaultInterpreterPath": "../red-teaming/.venv/bin/python",
+        "python.defaultInterpreterPath": "${workspaceFolder:Red-Teaming}/.venv/bin/python",
+        "python.testing.pytestEnabled": true,
+        "python.testing.pytestArgs": ["-v"],
+        "python.testing.cwd": "${workspaceFolder:Red-Teaming}"
       }
     },
-        {
+    {
       "path": "../graph-mcp",
       "name": "Graph-MCP",
       "settings": {
-        "python.defaultInterpreterPath": "../graph-mcp/.venv/bin/python",
+        "python.defaultInterpreterPath": "${workspaceFolder:Graph-MCP}/.venv/bin/python",
+        "python.testing.pytestEnabled": true,
+        "python.testing.pytestArgs": ["-v"],
+        "python.testing.cwd": "${workspaceFolder:Graph-MCP}"
+      }
+    },
+    {
+      "path": "../agents",
+      "name": "Agent",
+      "settings": {
+        "python.defaultInterpreterPath": "${workspaceFolder:Agent}/.venv/bin/python",
+        "python.testing.pytestEnabled": true,
+        "python.testing.pytestArgs": ["-v"],
+        "python.testing.cwd": "${workspaceFolder:Agent}"
       }
     }
   ],

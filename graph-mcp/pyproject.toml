@@ -12,20 +12,5 @@ dependencies = [
 
 [dependency-groups]
 dev = [
-    "agent-framework>=1.0.0b251120",
-    "pytest>=8.0.0",
-    "pytest-asyncio>=0.23.0",
-]
-
-[tool.pytest.ini_options]
-testpaths = ["test"]
-python_files = ["test_*.py", "*_test.py", "agent.py", "tool_usage.py"]
-python_classes = ["Test*"]
-python_functions = ["test_*"]
-asyncio_mode = "auto"
-log_cli = true
-log_cli_level = "INFO"
-markers = [
-    "asyncio: mark test as an async test",
-    "integration: mark test as an integration test (requires MCP server running)",
+    "debugpy>=1.8.0",
 ]
