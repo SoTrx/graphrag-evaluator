@@ -1,0 +1,15 @@
+@baseUrl = http://localhost:8088
+
+POST {{baseUrl}}/responses
+Content-Type: application/json 
+
+{
+    "input": {
+        "messages": [
+            {
+                "role": "user",
+                "content": "Analyze the market potential and compliance risks of launching a new AI-powered productivity app."
+            }
+        ]
+    }
+}
