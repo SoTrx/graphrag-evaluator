@@ -14,7 +14,10 @@
     "ghcr.io/devcontainers-extra/features/uv:1.0.1": {},
     "ghcr.io/devcontainers-extra/features/ruff:1": {},
     "ghcr.io/devcontainers/features/docker-in-docker:2": {},
-    "ghcr.io/devcontainers-extra/features/ffmpeg-apt-get:1": {}
+    "ghcr.io/devcontainers-extra/features/ffmpeg-apt-get:1": {},
+    "ghcr.io/devcontainers/features/github-cli:1": {},
+		"ghcr.io/rocker-org/devcontainer-features/miniforge:2": {},
+		"ghcr.io/azure/azure-dev/azd:0": {}
   },
   "forwardPorts": [
     18888,
@@ -33,7 +36,11 @@
         "ms-python.debugpy",
         "hashicorp.terraform",
         "yzhang.markdown-all-in-one",
-        "tamasfe.even-better-toml"
+        "tamasfe.even-better-toml",
+				"ms-python.vscode-python-envs",
+				"ms-python.python",
+				"ms-toolsai.vscode-jupyter-powertoys",
+				"ms-toolsai.jupyter"
       ],
       "settings": {
         "editor.defaultFormatter": "charliermarsh.ruff",
