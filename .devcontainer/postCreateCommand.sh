@@ -15,5 +15,6 @@ cd agents && uv sync && cd -
 cd agent-framework-samples && uv sync && cd -
 # Install graphviz for visualization
 
+source agent-framework-samples/.venv/bin/activate
 sudo apt update
 sudo apt install graphviz -y
