@@ -1,8 +1,6 @@
 {
     "version": "0.2.0",
     "configurations": [
-        
-
         {
             "name": "Python: main.py (uv managed)",
             "type": "debugpy",
@@ -41,6 +39,16 @@
             "console": "integratedTerminal",
             "cwd": "${workspaceFolder}/agents",
             "python": "${workspaceFolder}/agents/.venv/bin/python",
+            "justMyCode": false
+        },
+        {
+            "name": "Agent Workflow Main (uv managed)",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "${workspaceFolder}/agent-framework-samples/a_agent_workflows/main.py",
+            "console": "integratedTerminal",
+            "cwd": "${workspaceFolder}/agent-framework-samples",
+            "python": "${workspaceFolder}/agent-framework-samples/.venv/bin/python",
             "justMyCode": false
         }
     ],
