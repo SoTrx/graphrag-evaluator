@@ -1,16 +1,14 @@
-import os 
+import os
 
-from agent_framework.openai import OpenAIChatClient  
-from dotenv import load_dotenv # 📁 Secure configuration loading
+from agent_framework.azure import AzureOpenAIChatClient
+from azure.identity import DefaultAzureCredential
+from dotenv import load_dotenv  # 📁 Secure configuration loading
 
 load_dotenv()  # 📁 Load environment variables from .env file
 
 
-chat_client = OpenAIChatClient(
-    base_url=os.environ.get("GITHUB_ENDPOINT"),    # 🌐 GitHub Models API endpoint
-    api_key=os.environ.get("GITHUB_TOKEN"),        # 🔑 Authentication token
-    model_id=os.environ.get("GITHUB_MODEL_ID")     # 🎯 Selected AI model
-)
+chat_client = AzureOpenAIChatClient(credential=DefaultAzureCredential())
+
 
 FRONTDESK_NAME = "FrontDesk"
 FRONTDESK_INSTRUCTIONS = """
@@ -23,10 +21,9 @@ FRONTDESK_INSTRUCTIONS = """
     """
 
 
-
 front_desk_agent = chat_client.create_agent(
-        instructions=(
-            FRONTDESK_INSTRUCTIONS
-        ),
-        name=FRONTDESK_NAME,
+    instructions=(
+        FRONTDESK_INSTRUCTIONS
+    ),
+    name=FRONTDESK_NAME,
 )

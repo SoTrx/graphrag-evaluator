@@ -1,16 +1,13 @@
-import os 
+import os
 
-from agent_framework.openai import OpenAIChatClient  
-from dotenv import load_dotenv # 📁 Secure configuration loading
+from agent_framework.azure import AzureOpenAIChatClient
+from azure.identity import DefaultAzureCredential
+from dotenv import load_dotenv  # 📁 Secure configuration loading
 
 load_dotenv()  # 📁 Load environment variables from .env file
 
 
-chat_client = OpenAIChatClient(
-    base_url=os.environ.get("GITHUB_ENDPOINT"),    # 🌐 GitHub Models API endpoint
-    api_key=os.environ.get("GITHUB_TOKEN"),        # 🔑 Authentication token
-    model_id=os.environ.get("GITHUB_MODEL_ID")     # 🎯 Selected AI model
-)
+chat_client = AzureOpenAIChatClient(credential=DefaultAzureCredential())
 
 REVIEWER_NAME = "Concierge"
 REVIEWER_INSTRUCTIONS = """
@@ -20,11 +17,9 @@ REVIEWER_INSTRUCTIONS = """
     If not, provide insight on how to refine the recommendation without using a specific example. 
     """
 
-
-
 reviewer_agent = chat_client.create_agent(
-        instructions=(
-            REVIEWER_INSTRUCTIONS
-        ),
-        name=REVIEWER_NAME,
+    instructions=(
+        REVIEWER_INSTRUCTIONS
+    ),
+    name=REVIEWER_NAME,
 )

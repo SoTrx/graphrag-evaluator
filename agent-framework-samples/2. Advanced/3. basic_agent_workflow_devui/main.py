@@ -1,5 +1,6 @@
 from travelplan_workflow import workflow  # 🏗️ The travel plan workflow
 
+
 def main():
     """Launch the travel workflow in DevUI."""
     import logging
@@ -12,10 +13,11 @@ def main():
 
     logger.info("Starting Basic Workflow")
     logger.info("Available at: http://localhost:8090")
-    logger.info("Entity ID: workflow_basic")
+    logger.info("Entity ID: workflow_travelplan")
 
     # Launch server with the workflow
-    serve(entities=[workflow], port=8090, auto_open=True)
+    serve(entities=[workflow], host="localhost", port=8090,
+          auto_open=True, tracing_enabled=True)
 
 
 if __name__ == "__main__":

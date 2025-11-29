@@ -4,9 +4,6 @@ import asyncio
 import os
 from dataclasses import dataclass
 
-from azure.identity.aio import AzureCliCredential
-from azure.ai.projects.aio import AIProjectClient
-
 from agent_framework import (
     AgentExecutor,
     AgentExecutorRequest,
@@ -17,9 +14,12 @@ from agent_framework import (
     WorkflowContext,
     executor,
 )
-
-from evangelist_agent import agent as evangelist_agent, EvangelistAgent
-from contentreview_agent import agent as reviewer_agent, ReviewAgent
+from azure.ai.projects.aio import AIProjectClient
+from azure.identity.aio import AzureCliCredential
+from contentreview_agent import ReviewAgent
+from contentreview_agent import agent as reviewer_agent
+from evangelist_agent import EvangelistAgent
+from evangelist_agent import agent as evangelist_agent
 from publisher_agent import agent as publisher_agent
 
 # Module-level storage for lazy initialization
@@ -39,24 +39,27 @@ class ReviewResult:
 
 @executor(id="to_evangelist_content_result")
 async def to_evangelist_content_result(
-    response: AgentExecutorResponse, 
+    response: AgentExecutorResponse,
     ctx: WorkflowContext[AgentExecutorRequest]
 ) -> None:
     """Convert evangelist agent response to structured format and forward to reviewer"""
-    print(f"📝 [Workflow] Raw response from evangelist agent: {response.agent_run_response}")
-    agent = EvangelistAgent.model_validate_json(response.agent_run_response.text)
+    print(
+        f"📝 [Workflow] Raw response from evangelist agent: {response.agent_run_response}")
+    agent = EvangelistAgent.model_validate_json(
+        response.agent_run_response.text)
     user_msg = ChatMessage(Role.USER, text=agent.draft_content)
     await ctx.send_message(AgentExecutorRequest(messages=[user_msg], should_respond=True))
 
 
 @executor(id="to_reviewer_result")
 async def to_reviewer_result(
-    response: AgentExecutorResponse, 
+    response: AgentExecutorResponse,
     ctx: WorkflowContext[ReviewResult]
 ) -> None:
     """Convert reviewer agent response to structured format"""
-    print(f"🔍 [Workflow] Raw response from reviewer agent: {response.agent_run_response.text}")
-    
+    print(
+        f"🔍 [Workflow] Raw response from reviewer agent: {response.agent_run_response.text}")
+
     parsed = ReviewAgent.model_validate_json(response.agent_run_response.text)
     await ctx.send_message(
         ReviewResult(
@@ -70,11 +73,11 @@ async def to_reviewer_result(
 def select_targets(review: ReviewResult, target_ids: list[str]) -> list[str]:
     """
     Select workflow path based on review result
-    
+
     Args:
         review: The review result containing decision
         target_ids: List of [handle_review_id, save_draft_id]
-    
+
     Returns:
         List containing the selected target executor ID
     """
@@ -97,7 +100,7 @@ async def handle_review(review: ReviewResult, ctx: WorkflowContext[str]) -> None
     else:
         await ctx.send_message(
             AgentExecutorRequest(
-                messages=[ChatMessage(Role.USER, text=review.draft_content)], 
+                messages=[ChatMessage(Role.USER, text=review.draft_content)],
                 should_respond=True
             )
         )
@@ -109,38 +112,33 @@ async def save_draft(review: ReviewResult, ctx: WorkflowContext[AgentExecutorReq
     # Only called for approved drafts by selection_func
     await ctx.send_message(
         AgentExecutorRequest(
-            messages=[ChatMessage(Role.USER, text=review.draft_content)], 
+            messages=[ChatMessage(Role.USER, text=review.draft_content)],
             should_respond=True
         )
     )
 
 
-
-
-
-    
 # Create agent executors
 evangelist_executor = AgentExecutor(evangelist_agent, id="evangelist_agent")
 reviewer_executor = AgentExecutor(reviewer_agent, id="reviewer_agent")
 publisher_executor = AgentExecutor(publisher_agent, id="publisher_agent")
-    
-    # Build the conditional workflow
+
+# Build the conditional workflow
 workflow = (
-        WorkflowBuilder()
-        .set_start_executor(evangelist_executor)
-        .add_edge(evangelist_executor, to_evangelist_content_result)
-        .add_edge(to_evangelist_content_result, reviewer_executor)
-        .add_edge(reviewer_executor, to_reviewer_result)
-        .add_multi_selection_edge_group(
-            to_reviewer_result,
-            [handle_review, save_draft],
-            selection_func=select_targets,
-        )
-        .add_edge(save_draft, publisher_executor)
-        .build()
+    WorkflowBuilder()
+    .set_start_executor(evangelist_executor)
+    .add_edge(evangelist_executor, to_evangelist_content_result)
+    .add_edge(to_evangelist_content_result, reviewer_executor)
+    .add_edge(reviewer_executor, to_reviewer_result)
+    .add_multi_selection_edge_group(
+        to_reviewer_result,
+        [handle_review, save_draft],
+        selection_func=select_targets,
     )
+    .add_edge(save_draft, publisher_executor)
+    .build()
+)
 
 
 # Create the lazy workflow wrapper instance - this is what gets imported
 # workflow = _workflow
-
