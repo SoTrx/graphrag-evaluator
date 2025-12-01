@@ -1,23 +1,17 @@
 {
-  "name": "AI Shop POC - Python",
-  //"image" : "nvidia/cuda:13.0.0-devel-ubuntu24.04",
+  "name": "Evaluation SDK Dev Container",
   "image": "mcr.microsoft.com/devcontainers/python:3.12-bookworm",
-  "runArgs": [
-    "--gpus=all"
-  ],
-    "hostRequirements": {
-      "gpu": "optional"
-    },
   "features": {
     "azure-cli": {},
     "ghcr.io/devcontainers/features/terraform:1": {},
-    "ghcr.io/devcontainers-extra/features/uv:1.0.1": {},
+    "ghcr.io/devcontainers-extra/features/uv:1.0.2": {},
     "ghcr.io/devcontainers-extra/features/ruff:1": {},
     "ghcr.io/devcontainers/features/docker-in-docker:2": {},
-    "ghcr.io/devcontainers-extra/features/ffmpeg-apt-get:1": {},
     "ghcr.io/devcontainers/features/github-cli:1": {},
-		"ghcr.io/rocker-org/devcontainer-features/miniforge:2": {},
-		"ghcr.io/azure/azure-dev/azd:0": {}
+		"ghcr.io/azure/azure-dev/azd:0": {},
+    "ghcr.io/devcontainers-extra/features/apt-packages:1": {
+      "packages": "graphviz libgraphviz-dev ffmpeg"
+    }
   },
   "forwardPorts": [
     18888,
@@ -26,23 +20,27 @@
   "customizations": {
     "vscode": {
       "extensions": [
+        // Python and related
         "ms-python.python",
-        "github.copilot",
-        "github.copilot-chat",
-        "humao.rest-client",
         "ms-python.vscode-pylance",
         "charliermarsh.ruff",
         "ms-python.bandit",
         "ms-python.debugpy",
+				"ms-python.vscode-python-envs",
+
+        // Copilot 
+        "github.copilot",
+        "github.copilot-chat",
+
+        // Foundry
+        "ms-windows-ai-studio.windows-ai-studio",
+        "teamsdevapp.vscode-ai-foundry",
+
+        // Tools and utilities
         "hashicorp.terraform",
         "yzhang.markdown-all-in-one",
-        "tamasfe.even-better-toml",
-				"ms-python.vscode-python-envs",
-				"ms-python.python",
 				"ms-toolsai.vscode-jupyter-powertoys",
-				"ms-toolsai.jupyter",
-        "ms-windows-ai-studio.windows-ai-studio",
-        "teamsdevapp.vscode-ai-foundry"
+				"ms-toolsai.jupyter"
       ],
       "settings": {
         "editor.defaultFormatter": "charliermarsh.ruff",
@@ -51,7 +49,6 @@
           "source.organizeImports": "explicit"
         },
         "python.languageServer": "Pylance",
-        "dapr.paths.daprd": "~/.dapr/bin/daprd",
         "files.exclude": {
           "**/__pycache__": true,
           "**/*.pyc": true,

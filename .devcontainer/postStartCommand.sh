@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -ex
 SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
-ASPIRE_DASHBOARD_VERSION=9.4
+ASPIRE_DASHBOARD_VERSION=9.5.2
 
 # Start the Aspire Dashboard
 # 18888 is the WEB UI port

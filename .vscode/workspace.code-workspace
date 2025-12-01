@@ -4,13 +4,13 @@
       "path": ".."
     },
     {
-      "path": "../test-eval",
-      "name": "Test-Eval",
+      "path": "../evaluation",
+      "name": "Evaluation",
       "settings": {
-        "python.defaultInterpreterPath": "${workspaceFolder:Test-Eval}/.venv/bin/python",
+        "python.defaultInterpreterPath": "${workspaceFolder:Evaluation}/.venv/bin/python",
         "python.testing.pytestEnabled": true,
         "python.testing.pytestArgs": ["-v"],
-        "python.testing.cwd": "${workspaceFolder:Test-Eval}"
+        "python.testing.cwd": "${workspaceFolder:Evaluation}"
       }
     },
     {
@@ -34,13 +34,13 @@
       }
     },
     {
-      "path": "../agent-framework-samples",
-      "name": "Agent-Framework-Samples",
+      "path": "../agent-framework",
+      "name": "Agent-Framework",
       "settings": {
-        "python.defaultInterpreterPath": "${workspaceFolder:Agent-Framework-Samples}/.venv/bin/python",
+        "python.defaultInterpreterPath": "${workspaceFolder:Agent-Framework}/.venv/bin/python",
         "python.testing.pytestEnabled": true,
         "python.testing.pytestArgs": ["-v"],
-        "python.testing.cwd": "${workspaceFolder:Agent-Framework-Samples}"
+        "python.testing.cwd": "${workspaceFolder:Agent-Framework}"
       }
     }
   ],

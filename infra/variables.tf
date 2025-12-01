@@ -1,23 +1,11 @@
-variable "environment" {
-  description = "The environment deployed"
+variable "base_name" {
+  description = "Base name for all resources"
   type        = string
-  default     = "dev"
-  validation {
-    condition     = can(regex("(dev|stg|prd)", var.environment))
-    error_message = "The environment value must be a valid."
-  }
 }
 
-variable "domain" {
-  description = "The name of the project's domain"
+variable "subscription_id" {
   type        = string
-  default     = "ai"
-}
-
-variable "application" {
-  type        = string
-  default     = "shop"
-  description = "The application name"
+  description = "The Azure Subscription ID where the resources will be created"
 }
 
 variable "location" {
