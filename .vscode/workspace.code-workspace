@@ -34,16 +34,6 @@
       }
     },
     {
-      "path": "../agents",
-      "name": "Agent",
-      "settings": {
-        "python.defaultInterpreterPath": "${workspaceFolder:Agent}/.venv/bin/python",
-        "python.testing.pytestEnabled": true,
-        "python.testing.pytestArgs": ["-v"],
-        "python.testing.cwd": "${workspaceFolder:Agent}"
-      }
-    },
-    {
       "path": "../agent-framework-samples",
       "name": "AgentFMK",
       "settings": {
